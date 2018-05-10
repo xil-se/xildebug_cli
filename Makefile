@@ -6,13 +6,13 @@ INCLUDES := \
 DEFS := \
 
 CFLAGS += \
-	-Wall -Wextra -Wpedantic -Wno-unused-parameter -std=c99 -g \
+	-Wall -Wextra -Wpedantic -Wno-unused-parameter -g \
 	$(shell pkg-config --cflags libusb-1.0) \
 	$(addprefix -D, $(DEFS)) \
 	$(addprefix -I, $(INCLUDES))
 
 LIBS := \
-	$(shell pkg-config --libs libusb-1.0)
+	$(shell pkg-config --libs libusb-1.0) -lreadline
 
 OBJS := $(patsubst %.c,out/obj/%.o, $(filter %.c, $(SRCS)))
 DEPS := $(patsubst %.o,%.d,$(OBJS))
