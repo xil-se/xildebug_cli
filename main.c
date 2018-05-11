@@ -49,14 +49,14 @@ command_t commands[] =
 char *strtrim(char *str)
 {
 	char *p = str;
-	while(isspace(*p))
+	while (isspace(*p))
 		++p;
 
-	if(*p == '\0')
+	if (*p == '\0')
 		return p;
 
 	char *t = p + strlen(p) - 1;
-	while((t > p) && isspace(*t))
+	while ((t > p) && isspace(*t))
 		--t;
 
 	*(++t) = '\0';
@@ -70,21 +70,21 @@ int cmd_init(const char *arg)
 
 	r = libusb_init(NULL);
 	if (r != LIBUSB_SUCCESS) {
-		printf("Failed to init libusb\r\n");
+		printf("Failed to init libusb\n");
 		return 1;
 	}
 
 	// TODO: Allow to filter by serial
 	handle = libusb_open_device_with_vid_pid(NULL, XILDEBUG_VID, XILDEBUG_PID);
 	if (handle == NULL) {
-		printf("Failed to open vid: 0x%04X, pid: 0x%04X\r\n", XILDEBUG_VID, XILDEBUG_PID);
+		printf("Failed to open vid: 0x%04X, pid: 0x%04X\n", XILDEBUG_VID, XILDEBUG_PID);
 		libusb_exit(NULL);
 		return 1;
 	}
 
 	dev = libusb_get_device(handle);
 	if (dev == NULL) {
-		printf("Failed to get device pointer\r\n");
+		printf("Failed to get device pointer\n");
 		libusb_close(handle);
 		libusb_exit(NULL);
 		return 1;
@@ -94,13 +94,13 @@ int cmd_init(const char *arg)
 
 	r = libusb_claim_interface(handle, XILDEBUG_HID_IFACE_NO);
 	if (r != LIBUSB_SUCCESS) {
-		printf("Failed to get claim the HID interface\r\n");
+		printf("Failed to get claim the HID interface\n");
 		libusb_close(handle);
 		libusb_exit(NULL);
 		return 1;
 	}
 
-	printf("Initialized.\r\n");
+	printf("Initialized.\n");
 
 	return 0;
 }
@@ -118,7 +118,7 @@ int cmd_deinit(const char *arg)
 	handle = NULL;
 	dev = NULL;
 
-	printf("Deinitialized.\r\n");
+	printf("Deinitialized.\n");
 
 	return 0;
 }
@@ -130,7 +130,7 @@ int cmd_transfer(const char *arg)
 	int r;
 
 	if (handle == NULL) {
-		printf("Please call 'init' first\r\n");
+		printf("Please call 'init' first\n");
 		return 1;
 	}
 
@@ -145,10 +145,10 @@ int cmd_transfer(const char *arg)
 	if (r != LIBUSB_SUCCESS)
 		return r;
 
-	printf("Received %d bytes:\r\n", xfer_len);
+	printf("Received %d bytes:\n", xfer_len);
 	for (int i = 0; i < xfer_len; ++i)
 		printf("0x%02X ", buf[i]);
-	printf("\r\n");
+	printf("\n");
 
 	return 0;
 }
@@ -157,20 +157,20 @@ int cmd_help(const char *arg)
 {
 	int printed = 0;
 
-	for(int i = 0; commands[i].name; i++) {
+	for (int i = 0; commands[i].name; i++) {
 		if (!(*arg) || (strcmp(arg, commands[i].name) == 0)) {
-			if(commands[i].doc) {
+			if (commands[i].doc) {
 				printf("%-20s%s.\n", commands[i].name, commands[i].doc);
 				++printed;
 			}
 		}
 	}
 
-	if(!printed) {
+	if (!printed) {
 		printf("No command matching '%s'. Available commands:\n", arg);
 
-		for(int i = 0; commands[i].name; i++) {
-			if(printed == 6) {
+		for (int i = 0; commands[i].name; i++) {
+			if (printed == 6) {
 				printed = 0;
 				printf("\n");
 			}
@@ -179,7 +179,7 @@ int cmd_help(const char *arg)
 			++printed;
 		}
 
-		if(printed)
+		if (printed)
 			printf("\n");
 	}
 
@@ -195,8 +195,8 @@ int cmd_quit(const char *arg)
 
 command_t *find_cmd(char *name)
 {
-	for(int i = 0; commands[i].name; i++)
-		if(strcmp(name, commands[i].name) == 0)
+	for (int i = 0; commands[i].name; i++)
+		if (strcmp(name, commands[i].name) == 0)
 			return &commands[i];
 
 	return NULL;
@@ -210,19 +210,19 @@ int exec_cmd(char *line)
 
 	char *word = line + i;
 
-	while(line[i] && !isspace(line[i]))
+	while (line[i] && !isspace(line[i]))
 		++i;
 
-	if(line[i])
+	if (line[i])
 		line[i++] = '\0';
 
 	command_t *cmd = find_cmd(word);
-	if(!cmd) {
+	if (!cmd) {
 		printf("%s: no such command\n", word);
 		return -1;
 	}
 
-	while(isspace(line[i]))
+	while (isspace(line[i]))
 		++i;
 
 	word = line + i;
@@ -234,16 +234,16 @@ char *cmd_generator(const char *text, int state)
 {
 	static int idx, len;
 
-	if(!state) {
+	if (!state) {
 		idx = 0;
 		len = strlen(text);
 	}
 
 	char *name;
-	while((name = commands[idx].name)) {
+	while ((name = commands[idx].name)) {
 		++idx;
 
-		if(strncmp(name, text, len) == 0)
+		if (strncmp(name, text, len) == 0)
 			return strdup(name);
 	}
 
@@ -252,7 +252,7 @@ char *cmd_generator(const char *text, int state)
 
 char **cmd_completion(const char *text, int start, int end)
 {
-	if(start == 0)
+	if (start == 0)
 		return rl_completion_matches(text, cmd_generator);
 
 	return NULL;
@@ -261,7 +261,7 @@ char **cmd_completion(const char *text, int start, int end)
 void print_usage(const char *program)
 {
 	const char *idx = strrchr(program, '/');
-	if(idx)
+	if (idx)
 		program = ++idx;
 
 	fprintf(stderr, "Usage:\n"
@@ -281,12 +281,12 @@ int main(int argc, char *argv[])
 
 	opterr = false;
 
-	while(true) {
+	while (true) {
 		const int c = getopt_long(argc, argv, "h", long_opts, NULL);
-		if(c == -1)
+		if (c == -1)
 			break;
 
-		switch(c) {
+		switch (c) {
 			case 'h':
 			default:
 				print_usage(argv[0]);
@@ -299,18 +299,18 @@ int main(int argc, char *argv[])
 	rl_attempted_completion_function = cmd_completion;
 
 	char *line = NULL;
-	while(!quit) {
+	while (!quit) {
 		line = readline("# ");
 
-		if(line == NULL)
+		if (line == NULL)
 			break;
 
 		char *input = strtrim(line);
-		if(input) {
+		if (input) {
 			add_history(input);
 
-			if(exec_cmd(input) != 0)
-				printf("Failed to exec command\r\n");
+			if (exec_cmd(input) != 0)
+				printf("Failed to exec command\n");
 		}
 
 		free(line);
