@@ -6,7 +6,7 @@ INCLUDES := \
 DEFS := \
 
 CFLAGS += \
-	-Wall -Wextra -Wpedantic -Wno-unused-parameter -g \
+	-Wall -Wextra -Wpedantic -Wno-unused-parameter -std=c99 -g \
 	$(shell pkg-config --cflags libusb-1.0) \
 	$(addprefix -D, $(DEFS)) \
 	$(addprefix -I, $(INCLUDES))
