@@ -1,7 +1,14 @@
-dist: trusty
 language: c
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+    - os: osx
+
 compiler:
   - gcc
+  - clang
 
 addons:
   apt:
