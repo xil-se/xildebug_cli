@@ -1,9 +1,11 @@
+#include <ctype.h>
 #include <getopt.h>
 #include <libusb.h>
 #include <stdio.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -41,7 +43,7 @@ command_t commands[] =
 	{ "quit",			cmd_quit,			"Quit program" },
 	{ "exit",			cmd_quit,			NULL },
 
-	{ NULL }
+	{ NULL, 			NULL,				NULL }
 };
 
 char *strtrim(char *str)
@@ -220,7 +222,7 @@ int exec_cmd(char *line)
 		return -1;
 	}
 
-	while(whitespace(line[i]))
+	while(isspace(line[i]))
 		++i;
 
 	word = line + i;
@@ -274,7 +276,7 @@ int main(int argc, char *argv[])
 	const struct option long_opts[] =
 	{
 		{ "help", no_argument, NULL, 'h' },
-		{ NULL }
+		{ NULL, 0, NULL, 0 },
 	};
 
 	opterr = false;
