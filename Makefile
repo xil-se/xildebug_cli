@@ -4,6 +4,7 @@ SRCS := \
 INCLUDES := \
 
 DEFS := \
+	_GNU_SOURCE
 
 CFLAGS += \
 	-Wall -Wextra -Wpedantic -Wno-unused-parameter -std=c99 -g \
