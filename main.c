@@ -1,10 +1,10 @@
 #include <getopt.h>
 #include <libusb.h>
+#include <stdio.h>
 #include <readline/history.h>
 #include <readline/readline.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 #define XILDEBUG_VID 0x1209
