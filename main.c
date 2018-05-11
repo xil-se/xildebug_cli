@@ -158,7 +158,7 @@ int cmd_help(const char *arg)
 	for(int i = 0; commands[i].name; i++) {
 		if (!(*arg) || (strcmp(arg, commands[i].name) == 0)) {
 			if(commands[i].doc) {
-				printf("%s\t\t%s.\n", commands[i].name, commands[i].doc);
+				printf("%-20s%s.\n", commands[i].name, commands[i].doc);
 				++printed;
 			}
 		}
