@@ -300,6 +300,9 @@ int main(int argc, char *argv[])
 	while(!quit) {
 		line = readline("# ");
 
+		if(line == NULL)
+			break;
+
 		char *input = strtrim(line);
 		if(input) {
 			add_history(input);
